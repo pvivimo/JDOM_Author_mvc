@@ -69,9 +69,9 @@ public class AppController {
 		
 		AuthorsListDto authorsListDto = service.saveFile(export);
 		model.addAttribute("authorsListDto", authorsListDto);
-		model.addAttribute("savedsuccessfull", false); //alapból nem volt sikeres a mentés
+		model.addAttribute("savedsuccessfull", "Saved successfull!"); //alapból nem volt sikeres a mentés
 		
-		return "authors.html";
+		return "export.html";
 	}
 	
 
