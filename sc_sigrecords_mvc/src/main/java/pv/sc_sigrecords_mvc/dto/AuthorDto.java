@@ -1,43 +1,42 @@
 package pv.sc_sigrecords_mvc.dto;
 
 public class AuthorDto {
-	
 	private String name;
-	private int counter;
+	private int occurance;
 	
 	
-	public AuthorDto(String name, int counter) {
+	public AuthorDto(String name) {
 		super();
 		this.name = name;
-		this.counter = counter;
+		this.occurance = 1;
 	}
-
-
+	
+	
 	public String getName() {
 		return name;
 	}
-
+	
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public int getCounter() {
-		return counter;
+	
+	public int getOccurance() {
+		return occurance;
 	}
-
-	public void setCounter(int counter) {
-		this.counter = counter;
+	
+	public void setOccurance(int occurance) {
+		this.occurance = occurance;
+	}
+	
+	public void incremenetOccurance() {
+		this.occurance++;
 	}
 
 
 	@Override
 	public String toString() {
-		return "AuthorDto [name=" + name + ", counter=" + counter + "]";
+		return "AuthorDto [name=" + name + ", occurance=" + occurance + "]";
 	}
 	
 	
-	
-	
-	
-
 }

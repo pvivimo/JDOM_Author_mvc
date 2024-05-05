@@ -2,56 +2,31 @@ package pv.sc_sigrecords_mvc.model;
 
 public class Author {
 	
-	private String position;
 	private String name;
-	private int counter;
+	private String position;
 	
 	
-	public Author(String position, String name) {
+	public Author(String name, String position) {
 		super();
-		this.position = position;
 		this.name = name;
-		this.counter = 0;
+		this.position = position;
 	}
 	
-
-	public String getPosition() {
-		return position;
-	}
-
-	public void setPosition(String position) {
-		this.position = position;
-	}
-
+	
 	public String getName() {
 		return name;
 	}
-
+	
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public int getCounter() {
-		return counter;
-	}
-
-	public void setCounter(int counter) {
-		this.counter = counter;
+	
+	public String getPosition() {
+		return position;
 	}
 	
-	public void incrementCounter() {
-		this.counter++;
+	public void setPosition(String position) {
+		this.position = position;
 	}
-
-
-	@Override
-	public String toString() {
-		return "Author [position=" + position + ", name=" + name + ", counter=" + counter + "]";
-	}
-	
-	
-	
-	
-	
 
 }

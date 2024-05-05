@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+	</head>
+	<body>
+		
+		<form action="/authors/search" method="get">
+			<input type="text" name="search" placeholder="search"/>
+			<input type="submit"/>
+		
+		
+		</form>
+		
+		<form action="/authors/order" method="get">
+			<select name="orderby">
+				<option value="abc">ABC</option>
+				<option value="321">321</option>
+			</select>
+			<input type="submit" />
+		</form>
+		
+		<form action="/authors/export" method="post">
+			<select name="export">
+				<option value="xmlfile">XML_file</option>
+				<option value="database">DATABASE</option>
+			</select>
+			<input type="submit"/>
+			
+		</form>
+		
+		<p th:if="${savedsuccessfull}" th:text="Saved successfull!"></p>
+	
+		<table>
+			<tr>
+				<th>Name</th>
+				<th>Occurance</th>
+			</tr>
+			
+			<tr th:each="authorDto : ${authorsListDto.getAuthorsList()}" >
+				<td th:text="${authorDto.getName()}"></td>
+				<td th:text="${authorDto.getOccurance()}"></td>
+			</tr>
+		</table>
+	
+	</body>
+</html>
