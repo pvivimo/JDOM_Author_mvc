@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import pv.sc_sigrecords_mvc.dto.AuthorDto;
 import pv.sc_sigrecords_mvc.model.Author;
+import pv.sc_sigrecords_mvc.model.SavedAuthor;
 
 
 @Repository
@@ -71,8 +72,9 @@ public class XMLParser {
 		return authorResultList;
 	}
 
-	public boolean fileWriter(List<AuthorDto> authorsList) throws IOException {
+	public boolean fileWriter(List<SavedAuthor> savedAuthorsList) throws IOException {
 		
+			
 		boolean savedSuccessfull = false;
 		/** XML */
 		FileWriter writer = new FileWriter("author.xml");
@@ -91,11 +93,11 @@ public class XMLParser {
 		Element rootElement = new Element("authors");
 		
 		
-		for(int index = 0; index <authorsList.size(); index++) {
-			AuthorDto authorDto = authorsList.get(index);
+		for(int index = 0; index <savedAuthorsList.size(); index++) {
+			SavedAuthor savedAuthor = savedAuthorsList.get(index);
 			Element authorElement = new Element("author");
-			authorElement.setText(authorDto.getName());
-			authorElement.setAttribute("occurance", Integer.toString(authorDto.getOccurance()));
+			authorElement.setText(savedAuthor.getName());
+			authorElement.setAttribute("occurance", Integer.toString(savedAuthor.getOccurance()));
 			rootElement.addContent(authorElement);
 			savedSuccessfull = true;
 			

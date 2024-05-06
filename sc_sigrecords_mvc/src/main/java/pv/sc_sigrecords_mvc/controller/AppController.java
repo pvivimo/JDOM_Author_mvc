@@ -27,7 +27,7 @@ public class AppController {
 	@GetMapping("/authors")
 	public String showAuthors(Model model) throws JDOMException, IOException {
 		
-		AuthorsListDto authorsListDto = service.getAuthorsAndOccurances(null);
+		AuthorsListDto authorsListDto = service.getAuthorsAndOccurances(null, null);
 		model.addAttribute("authorsListDto", authorsListDto);
 		
 		return "authors.html";
@@ -40,7 +40,7 @@ public class AppController {
 							@RequestParam("orderby") String order
 						) throws JDOMException, IOException {
 		
-		AuthorsListDto authorsListDto = service.getAuthorsAndOccurances(order);
+		AuthorsListDto authorsListDto = service.getAuthorsAndOccurances(order, null);
 		
 		
 		model.addAttribute("authorsListDto", authorsListDto);
@@ -51,13 +51,13 @@ public class AppController {
 	@GetMapping("/authors/search")
 	public String searchText(
 				Model model,
-				@RequestParam("search") String searchedText
+				@RequestParam("search") String searchedAuthorName
 			) throws JDOMException, IOException {
 		
-		AuthorsListDto authorsListDto = service.getSearchedText(searchedText);
+		AuthorsListDto authorsListDto = service.getAuthorsAndOccurances(null, searchedAuthorName);
 		model.addAttribute("authorsListDto", authorsListDto);
 		
-		return "search.html";
+		return "authors.html";
 		
 	}
 	

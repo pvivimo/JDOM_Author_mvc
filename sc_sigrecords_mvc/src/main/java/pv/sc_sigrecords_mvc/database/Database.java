@@ -26,7 +26,7 @@ public class Database {
 	}
 	
 	
-	public boolean persistFile(List<AuthorDto> authorsList) {
+	public boolean persistFile(List<SavedAuthor> authorsList) {
 		
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
@@ -35,25 +35,10 @@ public class Database {
 		
 		for(int index = 0; index < authorsList.size(); index++) {
 			
-			AuthorDto authorDto = authorsList.get(index);
-			SavedAuthor savedAuthor = new SavedAuthor();
+			SavedAuthor savedAuthor = authorsList.get(index);
 			
-			
-			savedAuthor.setName(authorDto.getName());
-			savedAuthor.setOccurance(authorDto.getOccurance());
-			
-//			//csak akkor mentse, ha még nem szerepel az adatbázisban
-//			List<SavedAuthor> sAuthors = null;
-//			SelectionQuery<SavedAuthor> query =
-//					session.createSelectionQuery("SELECT s FROM SavedAuthor s", SavedAuthor.class);
-//			
-//			sAuthors = query.getResultList();
-//			
-//			if(savedAuthor != sAuthors) {
-//				
-				session.persist(savedAuthor);
-				savedSuccessfull = true;
-//			}
+			session.persist(savedAuthor);
+			savedSuccessfull = true;
 		}
 		
 		tx.commit();

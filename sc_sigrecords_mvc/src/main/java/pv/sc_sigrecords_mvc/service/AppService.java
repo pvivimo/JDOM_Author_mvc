@@ -1,6 +1,7 @@
 package pv.sc_sigrecords_mvc.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jdom2.JDOMException;
@@ -11,6 +12,7 @@ import pv.sc_sigrecords_mvc.database.Database;
 import pv.sc_sigrecords_mvc.dto.AuthorDto;
 import pv.sc_sigrecords_mvc.dto.AuthorsListDto;
 import pv.sc_sigrecords_mvc.model.Author;
+import pv.sc_sigrecords_mvc.model.SavedAuthor;
 import pv.sc_sigrecords_mvc.parser.XMLParser;
 
 @Service
@@ -29,7 +31,7 @@ public class AppService {
 
 
 
-	public AuthorsListDto getAuthorsAndOccurances(String orderBy) throws JDOMException, IOException {
+	public AuthorsListDto getAuthorsAndOccurances(String orderBy, String searchedAuthorName) throws JDOMException, IOException {
 
 		AuthorsListDto authorsListDto = new AuthorsListDto();
 		
@@ -38,18 +40,22 @@ public class AppService {
 		for(int authorListIndex = 0; authorListIndex < authorList.size(); authorListIndex++) {
 			
 			Author currentAuthor = authorList.get(authorListIndex);
+			if(searchedAuthorName == null || currentAuthor.getName().contains(searchedAuthorName)) {
+				
+				AuthorDto searchedAuthorDto = authorsListDto.getAuthorDtoByName( currentAuthor.getName() );
+				if( searchedAuthorDto != null ) {
+					
+					searchedAuthorDto.incremenetOccurance();
+				}
+				else {
+					
+					AuthorDto authorDto = new AuthorDto( currentAuthor.getName() );
+					authorsListDto.addAuthor(authorDto);
+				}
+				
+			}
 			
 			
-			AuthorDto searchedAuthorDto = authorsListDto.getAuthorDtoByName( currentAuthor.getName() );
-			if( searchedAuthorDto != null ) {
-				
-				searchedAuthorDto.incremenetOccurance();
-			}
-			else {
-				
-				AuthorDto authorDto = new AuthorDto( currentAuthor.getName() );
-				authorsListDto.addAuthor(authorDto);
-			}
 		}
 		
 		
@@ -63,65 +69,31 @@ public class AppService {
 		return authorsListDto;
 	}
 
-	
-	public AuthorsListDto getSearchedText(String searchedText) throws JDOMException, IOException {
-		
-		AuthorsListDto authorsListDto = new AuthorsListDto();
-		
-		List<Author> authorList = parser.getAllAuthors();
-		
-			for(int authorListIndex = 0; authorListIndex < authorList.size(); authorListIndex++) {
-				
-				Author currentAuthor = authorList.get(authorListIndex);
-				String lowerCaseCurrentAuthor = currentAuthor.getName().toLowerCase();
-				currentAuthor.setName(lowerCaseCurrentAuthor);
-				boolean isContainsText = currentAuthor.getName().contains(searchedText);
-				
-				if(isContainsText) {
-					
-					String upperCaseCurrentAuthor = currentAuthor.getName().substring(0, 1).toUpperCase() 
-														+ currentAuthor.getName().substring(1);
-					currentAuthor.setName(upperCaseCurrentAuthor);
-					AuthorDto authorDto = new AuthorDto( currentAuthor.getName() );
-					authorsListDto.addAuthor(authorDto);
-				}
-				
-			}
-		return authorsListDto;
-	}
-
 
 	public AuthorsListDto saveFile(String export) throws JDOMException, IOException {
 		
-		AuthorsListDto authorsListDto = new AuthorsListDto();
+		AuthorsListDto authorsListDto = getAuthorsAndOccurances(null, null);
 		
-		
-		//Releváns szerzők kiolvasása az eredeti XML fájlból
-		List<Author> authorList = parser.getAllAuthors();
-		for(int authorListIndex = 0; authorListIndex < authorList.size(); authorListIndex++) {
+		List<SavedAuthor> savedAuthorList = new ArrayList<>();
+		List<AuthorDto> authorDtoList = authorsListDto.getAuthorsList();
+		for(int index = 0; index < authorDtoList.size(); index++) {
 			
-			Author currentAuthor = authorList.get(authorListIndex);
-			
-			
-			AuthorDto searchedAuthorDto = authorsListDto.getAuthorDtoByName( currentAuthor.getName() );
-			if( searchedAuthorDto != null ) {
-				
-				searchedAuthorDto.incremenetOccurance();
-			}
-			else {
-				
-				AuthorDto authorDto = new AuthorDto( currentAuthor.getName() );
-				authorsListDto.addAuthor(authorDto);
-			}
+			AuthorDto currentAuthorDto = authorDtoList.get(index);
+			SavedAuthor savedAuthor = new SavedAuthor();
+			savedAuthor.setName(currentAuthorDto.getName());
+			savedAuthor.setOccurance(currentAuthorDto.getOccurance());
+			savedAuthorList.add(savedAuthor);
 		}
 		
 		//Adatok kimentése a kívánt célállományba
 		if( ( export.equals("xmlfile")) ) {
 			
-			boolean saved = parser.fileWriter(authorsListDto.getAuthorsList());
+			boolean saved = parser.fileWriter(savedAuthorList);
 		}
 		else if( export.equals("database") ) {
-			boolean saved = db.persistFile(authorsListDto.getAuthorsList());
+			
+			
+			boolean saved = db.persistFile(savedAuthorList);
 		}
 		
 		return authorsListDto;
