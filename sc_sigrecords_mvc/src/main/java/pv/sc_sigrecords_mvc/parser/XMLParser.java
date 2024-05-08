@@ -15,7 +15,6 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.springframework.stereotype.Repository;
 
-import pv.sc_sigrecords_mvc.dto.AuthorDto;
 import pv.sc_sigrecords_mvc.model.Author;
 import pv.sc_sigrecords_mvc.model.SavedAuthor;
 
@@ -111,6 +110,33 @@ public class XMLParser {
 		writer.close();
 		
 		return savedSuccessfull;
+	}
+
+	public List<SavedAuthor> getAuthors(String path) throws JDOMException, IOException {
+		
+		List<SavedAuthor> savedAuthorList = new ArrayList<>();
+		
+		try {
+			SAXBuilder saxBuilder = new SAXBuilder();
+			File file = new File(path);
+			Document doc = saxBuilder.build(file);
+			
+			Element rootElement = doc.getRootElement();
+			List<Element> authorElementList = rootElement.getChildren("author");
+			for(int index = 0; index < authorElementList.size(); index++) {
+				
+				Element currentAuthorElement = authorElementList.get(index);
+				String authorName = currentAuthorElement.getValue();
+				int authorOccurance = Integer.parseInt(currentAuthorElement.getAttributeValue("occurance"));
+				SavedAuthor savedAuthor = new SavedAuthor(authorName, authorOccurance);
+				savedAuthorList.add(savedAuthor);
+			}
+		}catch(IOException e){
+			
+			savedAuthorList = null;
+		}
+		
+		return savedAuthorList;
 	}
 
 }

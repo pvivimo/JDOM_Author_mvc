@@ -101,6 +101,43 @@ public class AppService {
 
 
 
+	public AuthorsListDto sourceFile(String source, String path) throws JDOMException, IOException {
+		
+		AuthorsListDto authorsListDto = new AuthorsListDto();
+		List<SavedAuthor> savedAuthorList = null;
+		
+		if(source.equals("database")) {
+			
+			savedAuthorList = db.getAuthors();
+			
+		}else {
+			
+			savedAuthorList = parser.getAuthors(path);
+			
+		}
+		
+		if(savedAuthorList != null) {
+			if(savedAuthorList.size() > 0) {
+				
+				for(int index = 0; index < savedAuthorList.size(); index++) {
+					
+					SavedAuthor currentSavedAuthor = savedAuthorList.get(index);
+					AuthorDto authorDto = new AuthorDto(currentSavedAuthor.getName());
+					authorDto.setOccurance(currentSavedAuthor.getOccurance());
+					authorsListDto.addAuthor(authorDto);
+				}
+			}else {
+				
+				authorsListDto = null;
+			}
+			
+		}else {
+			
+			authorsListDto = null;
+		}
+		
+		return authorsListDto;
+	}
 
 }
 

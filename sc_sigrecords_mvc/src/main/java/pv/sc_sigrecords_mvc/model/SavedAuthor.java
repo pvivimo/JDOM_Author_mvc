@@ -21,6 +21,17 @@ public class SavedAuthor {
 	
 	@Column(name="occurance")
 	private int occurance;
+	
+	
+	public SavedAuthor() {
+		super();
+	}
+
+	public SavedAuthor(String name, int occurance) {
+		super();
+		this.name = name;
+		this.occurance = occurance;
+	}
 
 	public int getId() {
 		return id;
@@ -50,7 +61,5 @@ public class SavedAuthor {
 	public String toString() {
 		return "SavedAuthor [id=" + id + ", name=" + name + ", occurance=" + occurance + "]";
 	}
-	
-	
 
 }

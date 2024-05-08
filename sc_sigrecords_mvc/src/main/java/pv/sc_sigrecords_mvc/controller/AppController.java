@@ -23,6 +23,7 @@ public class AppController {
 		super();
 		this.service = service;
 	}
+
 	
 	@GetMapping("/authors")
 	public String showAuthors(Model model) throws JDOMException, IOException {
@@ -73,6 +74,36 @@ public class AppController {
 		
 		return "export.html";
 	}
+	
+	@GetMapping("/")
+	public String loadImportPage() {
+				
+		return "index.html";
+	}
+	
+	@GetMapping("/authors/import")
+	public String importFile(
+				Model model,
+				@RequestParam("source") String source,
+				@RequestParam("path") String path
+			) throws JDOMException, IOException {
+		
+		String targetPage = "";
+		AuthorsListDto authorsListDto = service.sourceFile(source, path);
+		model.addAttribute("authorsListDto", authorsListDto);
+		if(authorsListDto != null) {
+			
+			targetPage = "authors.html";
+		}else {
+			
+			targetPage = "index.html";
+		}
+		
+		return targetPage;
+		
+		
+	}
+	
 	
 
 }

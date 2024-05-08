@@ -47,6 +47,22 @@ public class Database {
 		return savedSuccessfull;
 		
 	}
+
+
+	public List<SavedAuthor> getAuthors() {
+		
+		Session session = sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
+		
+		SelectionQuery<SavedAuthor> query = session.createSelectionQuery("SELECT s FROM SavedAuthor s", SavedAuthor.class);
+		List<SavedAuthor> savedAuthorList = query.getResultList();
+		
+		tx.commit();
+		session.close();
+		
+		
+		return savedAuthorList;
+	}
 	
 
 }
